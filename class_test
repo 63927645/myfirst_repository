@@ -1,0 +1,251 @@
+#include <iostream>
+#include <string>
+#include <type_traits>
+using namespace std;
+
+
+template <typename T>
+class Student{
+    public:
+    T identity;
+    double grade;
+    Student(T a,double b){
+        identity=a;
+        grade=b;
+    }
+
+
+    void show(){
+        if(is_same_v<T,double>){
+            cout << "该学生的学号为: " << endl;
+            cout << identity << endl;
+        }
+        else if(is_same_v<T,string>){
+            cout << "该学生的姓名为: " << endl;
+            cout << identity << endl;
+        }
+        system("pause");
+        cout << "该学生的成绩为: " << endl;
+        cout << grade << endl;
+        system("pause");
+    }
+
+
+    ~Student(){
+        cout << "该函数正在被析构." << endl;
+        cin.get();
+    }
+
+
+};
+
+
+class test{
+    private:
+    int val;
+    public:
+    test(){val=0;}
+    test(int a){val=a;}
+    friend test operator+(const test&a,const test&b);
+    friend test operator-(const test&a,const test&b);
+    void show(){
+        cout << "该类的数值为： " << endl;
+        cout << val << endl;
+    }
+};
+
+
+test operator+(const test&a,const test&b){
+    return test(a.val+b.val);
+}
+
+test operator-(const test&a,const test&b){
+    return test(a.val-b.val);
+}
+
+
+template<typename T>
+void swapData(T&a,T&b){
+    T temp=a;
+    a=b;
+    b=temp;
+}
+
+
+class Dot{
+    public:
+    double x;
+    double y;
+    Dot(){x=0;y=0;}
+    Dot(double a,double b){x=a;y=b;}
+    void pri(){
+        cout << x << " " << y << endl;
+    }
+};
+
+
+class Line:public Dot{
+    public:
+    Line():Dot(){}
+    Line(double a,double b):Dot(a,b){}
+    Dot mid(const Dot&d1,const Dot&d2){
+        double mx=(d1.x+d2.x)/2;
+        double my=(d1.y+d2.y)/2;
+        return Dot(mx,my);
+    }
+    void showbase(){
+        Dot::pri();
+    }
+};
+
+
+class Person{
+    private:
+    int age;
+    string name;
+    public:
+    void setAge(int age){
+        this->age=age;
+    }
+    void setAge(string name){
+        this->name=name;
+    }
+    void shown(){
+        cout << name << " " << age << endl;
+    }
+};
+
+
+
+
+int main(){
+    bool now=true;
+    int a,b,c;
+    char cha;
+    double a1,a2,a3,a4;
+    Dot d1,d2;
+    Line l1;
+
+    cout << "欢迎来到类的测试程序：" << endl;
+    cin.get();
+    while(now){
+
+    cout << "请输入你要测试的选项： " << endl;
+    cout << "输入0，退出测试程序。" << endl;
+    cout << "输入1，测试模板类与析构函数。" << endl;
+    cout << "输入2，测试运算符重载和友元函数。" << endl;
+    cout << "输入3，测试模板函数。" << endl;
+    cout << "输入4，测试派生类的有关事项和printf函数的用法。" << endl;
+    cout << "输入5，测试this指针。" << endl;
+    cin >> a;
+    switch(a){
+        case 0:
+        cout << "欢迎您的下次使用！" << endl;
+        now=false;
+        break;
+        case 1:{
+        string name;
+        double num;
+        double g1,g2;
+        cout << "请输入一名学生的学号: " << endl;
+        cin >> num;
+        cout << "请输入该学生的成绩: " << endl;
+        cin >> g1;
+        cout << "请输入一名学生的姓名: " << endl;
+        cin.ignore();
+        getline(cin,name);
+        cout << "请输入该学生的成绩: " << endl;
+        cin >> g2;
+        Student<double> stu1(num,g1);
+        Student<string> stu2(name,g2);
+        stu1.show();
+        stu2.show();
+        }
+        break;
+        case 2:{
+            test te1;
+            cout << "请创建一个test类，表征一个数字，输入你要的数字：" <<endl;
+            int b,c;
+            cin >> b;
+            test te2(b);
+            cout << "请再创建一个test类，表征一个数字，输入你要的数字：" <<endl;
+            cin >> c;
+            test te3(c);
+            cout << "请输入你需要的运算符： " << endl;
+            cin >> cha;
+            test te4;
+            if(cha=='+'){
+                te4=te2+te3;
+            }
+            else{
+                te4=te2-te3;
+            }
+            te2.show();
+            te3.show();
+            cout << "以下是合成类：" << endl;
+            te4.show();
+            break;
+        }
+        case 3:{
+            cout << "先测试字符串： " << endl;
+            cout << "请输入两组字符串：" << endl;
+            string m,n;
+
+            cin >> m >> n;
+            cout << "交换前：" << endl;
+            cout << m << " " << n << endl;
+            cout << "交换后：" << endl;
+            swapData(m,n);
+            cout << m << " " << n << endl;
+            cin.get();
+
+
+            cout << "再测试整数： " << endl;
+            cout << "请输入两个整数： " << endl;
+            cin >> c >> b;
+            cout << "交换前：" << endl;
+            cout << c << " " << b << endl;
+            swapData(c,b);
+            cout << "交换后：" << endl;
+            cout << c << " " << b << endl;
+            cin.get();
+            break;
+        }
+        case 4:{
+            cout << "请输入第一个点的横坐标，纵坐标：" << endl;
+            cin >> a1 >> a2;
+            cout << "请输入第二个点的横坐标，纵坐标：" << endl;
+            cin >> a3 >> a4;
+            d1=Dot(a1,a2);
+            d2=Dot(a3,a4);
+            cout << "接下来为您打印两点坐标：" << endl;
+            d1.pri();
+            d2.pri();
+            Dot midDot=l1.mid(d1,d2);
+            l1=Line(midDot.x,midDot.y);
+            cout << "接下来为您打印中点坐标： " << endl;
+            l1.showbase();
+            system("pause");
+            printf("中点横坐标：%4.3f\n",midDot.x);
+            printf("中点纵坐标：%4.3f\n",midDot.y);
+            break;
+        }
+        case 5:{
+            Person p1;
+            string name;
+            int age;
+            cout << "现在创建个人身份： " << endl;
+            cout << "请依次输入该个人的年龄和姓名： " << endl;
+            cin >> age;
+            cin.ignore();
+            getline(cin,name);
+            p1.setAge(name);
+            p1.setAge(age);
+            p1.shown();
+            break;
+    }
+}
+}
+    system("pause");
+    return 0;
+}
